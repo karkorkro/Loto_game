@@ -1,6 +1,11 @@
 import random
 
 
+class IncorrectInput(ValueError):
+    def __str__(self):
+        return 'Некорректный ввод. Введите "y" или "n"'
+
+
 class Card:
 
     def __init__(self):
@@ -24,8 +29,6 @@ class Card:
                 result += ' -'
             elif 0 < num < 10:
                 result += f' {num}'
-            elif num < 10:
-                result += str(num)
             else:
                 result += str(num)
 
@@ -33,9 +36,9 @@ class Card:
                 result += '\n'
             else:
                 result += ' '
-        self.appearance = f'--------------------------\n{result}--------------------------'
+        self.appearance = f'{"-" * 26}\n{result}{"-" * 26}'
 
-    def change_appearance(self):
+    def update_appearance(self):
         result = ''
         for num_index, num in enumerate(self.card):
             if num == 0:
@@ -44,8 +47,6 @@ class Card:
                 result += ' -'
             elif 0 < num < 10:
                 result += f' {num}'
-            elif num < 10:
-                result += str(num)
             else:
                 result += str(num)
 
@@ -53,20 +54,25 @@ class Card:
                 result += '\n'
             else:
                 result += ' '
-        self.appearance = f'--------------------------\n{result}--------------------------'
+        self.appearance = f'{"-" * 26}\n{result}{"-" * 26}'
+
+    def cross(self, number):
+        x = self.card.index(number)
+        self.card[x] = -1
+        self.update_appearance()
+        self.crossed_nums += 1
 
     def strike(self, number):
         command = input('Хотите зачеркнуть номер на своей карточке? (y/n)  ')
+        while command != 'y' and command != 'n':
+            command = input('Вы ввели неверную команду, введите "y" или "n"')
         if command == 'y':
             if number in self.card:
-                x = self.card.index(number)
-                self.card[x] = -1
-                self.change_appearance()
-                self.crossed_nums += 1
+                self.cross(number)
             else:
                 print('You entered incorrect number. Game over. ')
                 self.lost = True
-        else:
+        elif command == 'n':
             if number in self.card:
                 print('you missed your number')
                 self.lost = True
@@ -78,10 +84,7 @@ class ComputerCard(Card):
 
     def strike(self, number):
         if number in self.card:
-            x = self.card.index(number)
-            self.card[x] = -1
-            self.change_appearance()
-            self.crossed_nums += 1
+            self.cross(number)
         else:
             pass
 

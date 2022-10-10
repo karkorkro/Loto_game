@@ -1,5 +1,6 @@
 from Class_description_for_cards import *
 
+
 # создает список кортежей по числу игроков,
 # где первый элемент - имя игрока, а второй - обьект класса карта:
 
@@ -28,8 +29,7 @@ for i in total_players:
 # каждое использованное число убирается из списка:
 kegs_list = random.sample(range(1, 91), 90)
 while max(cross_number_count_list) != 15:
-    keg = kegs_list[0]
-    kegs_list.remove(keg)
+    keg = kegs_list.pop(0)
     print(f'Выпал бочонок с номером {keg}')
 # вычеркивает из карты номер на бочонке, если он есть в карте
 # в картах пользователей метод класса сам уточняет, надо ли зачеркивать номер
