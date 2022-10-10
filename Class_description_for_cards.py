@@ -8,7 +8,8 @@ class IncorrectInput(ValueError):
 
 class Card:
 
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.nums = random.sample(range(1, 91), 15)
         self.crossed_nums = 0
         self.lost = False
@@ -37,6 +38,12 @@ class Card:
             else:
                 result += ' '
         self.appearance = f'{"-" * 26}\n{result}{"-" * 26}'
+
+    def __str__(self):
+        return self.name
+
+    def __getitem__(self, item):
+        return self.nums[item]
 
     def update_appearance(self):
         result = ''
@@ -90,9 +97,11 @@ class ComputerCard(Card):
 
 
 if __name__ == '__main__':
-    new_card = Card()
-    comp_card = ComputerCard()
+    new_card = Card('player1')
+    comp_card = ComputerCard('compute_player1')
+    print(new_card)
     print(new_card.appearance)
+    print(comp_card)
     print(comp_card.appearance)
     new_card.strike(50)
     comp_card.strike(50)
