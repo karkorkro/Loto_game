@@ -1,22 +1,25 @@
 import random
 
 
-class IncorrectInput(ValueError):
-    def __str__(self):
-        return 'Некорректный ввод. Введите "y" или "n"'
-
-
 class Card:
+
+    @classmethod
+    def create_class_item(cls, quantity, item_name):
+        items = []
+        for i in range(quantity):
+            result = cls(f'{item_name}{i}')
+            items.append(result)
+        return items
 
     def __init__(self, name):
         self.name = name
-        self.nums = random.sample(range(1, 91), 15)
+        self._nums = random.sample(range(1, 91), 15)
         self.crossed_nums = 0
         self.lost = False
 
         card = []
         for i in range(3):
-            nums = sorted(self.nums[5 * i: 5 * (i + 1)])
+            nums = sorted(self._nums[5 * i: 5 * (i + 1)])
             for j in range(4):
                 index = random.randint(0, len(nums))
                 nums.insert(index, 0)
@@ -39,11 +42,23 @@ class Card:
                 result += ' '
         self.appearance = f'{"-" * 26}\n{result}{"-" * 26}'
 
-    def __str__(self):
+    def __repr__(self):
         return self.name
 
     def __getitem__(self, item):
-        return self.nums[item]
+        return self._nums[item]
+
+    def __eq__(self, other):
+        if isinstance(other, int):
+            return self.crossed_nums == other
+        else:
+            return self.crossed_nums == other.crossed_nums
+
+    def __contains__(self, item):
+        return item in self._nums
+
+    def __gt__(self, other):
+        return self.crossed_nums > other.crossed_nums
 
     def update_appearance(self):
         result = ''
@@ -103,7 +118,10 @@ if __name__ == '__main__':
     print(new_card.appearance)
     print(comp_card)
     print(comp_card.appearance)
+    print(new_card == 0)
     new_card.strike(50)
     comp_card.strike(50)
     print(new_card.appearance)
     print(comp_card.appearance)
+    print(new_card == 1)
+    print(new_card == comp_card)
